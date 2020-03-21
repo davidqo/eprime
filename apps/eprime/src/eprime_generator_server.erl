@@ -233,7 +233,7 @@ high_resolution_wait(DestinationTime) ->
     end.
 
 calculate_next_write(DestinationTime, Diff, Error) when Error >= 1 ->
-    calculate_next_write(DestinationTime, Diff - 1, Error - 1);
+    calculate_next_write(DestinationTime, Diff + 1, Error - 1);
 calculate_next_write(DestinationTime, Diff, Error) ->
     TruncatedDiff = trunc(Diff),
     DestinationTime2 = DestinationTime + TruncatedDiff,
