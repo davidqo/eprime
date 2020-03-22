@@ -18,7 +18,8 @@ run:
 clean:
 	$(REBAR) clean
 
-test:
-	$(REBAR) clean
+test: clean 
+	$(REBAR) eunit test
+        
 
 .PHONY: all compile release run clean test

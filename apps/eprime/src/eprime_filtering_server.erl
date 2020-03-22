@@ -142,7 +142,7 @@ handle_info(awake, State = #state{
     case read(RedisHandler, QueueKey) of
         {ok, X} when is_integer(X) ->
             State2 = State#state{numbers_processed = NumbersProcessed + 1},
-            case is_prime(X) of
+            case eprime_utils:is_prime(X) of
                 true ->
                     State3 = State2#state{prime_numbers_selected = PrimeNumbersSelected + 1},
                     case save(RedisHandler, ResultKey, X) of
@@ -220,18 +220,3 @@ read(RedisHandler, QueueKey) ->
 -spec save(RedisHandler :: term(), ResultKey :: string(), X :: pos_integer()) -> {ok, binary()} | {error, term()}.
 save(RedisHandler, ResultKey, X) ->
     eredis:q(RedisHandler, ["SADD", ResultKey, integer_to_list(X)]).
-
-%% TODO: Написать проверяющий тест
--spec is_prime(N :: pos_integer()) -> boolean().
-is_prime(N) ->
-    do_test_prime(N, 2, math:sqrt(N)).
-
-do_test_prime(_, Divider, MaxDivider) when Divider > MaxDivider ->
-    true;
-do_test_prime(N, Divider, MaxDivider) ->
-    case N rem Divider of
-        0 ->
-            false;
-        _ ->
-            do_test_prime(N, Divider + 1, MaxDivider)
-    end.
